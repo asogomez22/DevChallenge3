@@ -43,8 +43,8 @@ const [botTimer, setBotTimer] = useState<number | null>(null);
   });
 
   useEffect(() => {
-    const newSocket = io('http://localhost:4000');
-    setSocket(newSocket);
+// ✅ AHORA (Producción)
+const newSocket = io('https://devchallenge3.onrender.com');    setSocket(newSocket);
     newSocket.on('connect', () => {
       setStatus('Connectat');
       newSocket.emit('get_public_games');
