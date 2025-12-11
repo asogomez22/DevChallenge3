@@ -109,13 +109,13 @@ const newSocket = io('https://devchallenge3.onrender.com');    setSocket(newSock
       if (data.isGoal) {
         playSound('goal');
         if (data.keeperPointsAwarded === 1) {
-             setStatus('¡GOL! (1 Pt)');
+             setStatus('¡GOL! (Porter: 1 Pt)');
         } else {
-             setStatus('¡GOL! (0 Pts)');
+             setStatus('¡GOL! (Porter: 0 Pts)');
         }
       } else {
         playSound('save');
-        setStatus('¡PARADÓN! (2 Pts)');
+        setStatus('¡PARADÓN! (Porter: 2 Pts)');
       }
     });
 
