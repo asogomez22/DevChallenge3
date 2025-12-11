@@ -1,0 +1,732 @@
+/* ---
+ * App.css
+ * ESTILOS GLOBALES, LOBBY, Y JUEGO
+ * --- */
+
+/* --- 1. Fuentes e Importaciones --- */
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+/* --- 2. Variables CSS (Tema) --- */
+:root {
+  --font-primary: 'Montserrat', sans-serif;
+  --font-display: 'Russo One', sans-serif;
+  --neon-green: #00ff87;
+  --neon-orange: #ffab00;
+  --neon-blue: #00e0ff;
+  --dark-bg: #0d0f13;
+  --glass-bg: rgba(20, 25, 30, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --danger-red: #e53935;
+}
+
+/* --- 3. Reset Básico y Scrollbar --- */
+body {
+  margin: 0;
+  font-family: var(--font-primary);
+  color: var(--text-primary);
+  background-color: var(--dark-bg);
+  overflow: hidden;
+}
+* {
+  box-sizing: border-box;
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #00e676; }
+
+/* --- 4. Pantalla de Carga (Splash) --- */
+.splash-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: var(--dark-bg);
+}
+.splash-screen h1 {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  color: var(--neon-green);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  animation: pulse 2s infinite ease-in-out;
+}
+.loader {
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-left-color: var(--neon-green);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 20px 0;
+}
+
+/* --- 5. Fondo del Lobby (Glassmorphism) --- */
+.lobby-background {
+  min-height: 100vh;
+  width: 100vw;
+  padding: 40px 20px;
+  background-image: url('https://images.unsplash.com/photo-1508098682722-e9d613ba2e3d?q=80&w=1920&auto-format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  /* ⚠️ ESTO CENTRA EL LOBBY */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.lobby-background::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* --- 6. Contenedor Principal del Lobby --- */
+.lobby-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  padding: 30px;
+  overflow: hidden;
+  z-index: 1;
+  animation: fadeIn 0.5s ease-out;
+}
+.lobby-header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 20px;
+}
+.lobby-header h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.lobby-header h1 span {
+  color: var(--neon-green);
+}
+.lobby-header .status {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* --- 7. Layout de 2 Columnas --- */
+.lobby-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+.lobby-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+/* Media query para lobby en móvil (se apila) */
+@media (max-width: 768px) {
+  .lobby-main { grid-template-columns: 1fr; }
+  .lobby-background { padding: 20px 10px; }
+  .lobby-container { padding: 20px; }
+}
+
+/* --- 8. Cajas Interiores del Lobby --- */
+.lobby-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 20px;
+}
+.lobby-box h3 {
+  margin-top: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--neon-green);
+  padding-bottom: 10px;
+  color: var(--neon-green);
+  letter-spacing: 1px;
+}
+.lobby-box label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* --- 9. Inputs y Botones del Lobby --- */
+input[type="text"], select {
+  width: 100%;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: white;
+  font-size: 1rem;
+  font-family: var(--font-primary);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-bottom: 10px;
+}
+input[type="text"]:focus, select:focus {
+  outline: none;
+  border-color: var(--neon-green);
+  box-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
+}
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 30px;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  font-family: var(--font-display);
+  letter-spacing: 1px;
+}
+button:disabled {
+  background-color: #444;
+  color: #777;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn-create {
+  background: var(--neon-orange);
+  color: black;
+  box-shadow: 0 0 10px rgba(255, 171, 0, 0.3);
+}
+.btn-create:hover:not(:disabled) {
+  background: #ffd600;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 171, 0, 0.5);
+}
+
+.join-code-wrapper { display: flex; gap: 10px; }
+.join-code-wrapper input {
+  flex-grow: 1;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 2px;
+  font-family: var(--font-display);
+  margin-bottom: 0;
+}
+.join-code-wrapper button {
+  flex-shrink: 0;
+  width: auto;
+  background: var(--neon-green);
+  color: black;
+  box-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
+}
+.join-code-wrapper button:hover:not(:disabled) {
+  background: #00e676;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 255, 135, 0.5);
+}
+
+/* --- 10. Lista de Partidas Públicas --- */
+.public-games-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+.public-games-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  border-left: 3px solid var(--neon-blue);
+  transition: background 0.2s, border-color 0.2s;
+}
+.public-games-list li:hover {
+  background: rgba(0, 0, 0, 0.5);
+  border-left-color: var(--neon-green);
+  cursor: pointer;
+}
+.public-games-list li.no-games {
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  border-left: none;
+}
+.public-games-list li small {
+  font-size: 0.8rem;
+  color: #ccc;
+  margin-left: 5px;
+}
+.btn-join-list {
+  width: auto;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  background: var(--neon-green);
+  color: black;
+}
+.btn-join-list:hover:not(:disabled) {
+  background: #00e676;
+}
+
+/* --- 11. Toggle Checkbox Personalizado --- */
+.public-toggle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+.public-toggle label {
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+}
+.public-toggle input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 40px;
+  height: 20px;
+  background: #333;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.public-toggle input[type="checkbox"]::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s ease-out;
+}
+.public-toggle input[type="checkbox"]:checked {
+  background: var(--neon-green);
+}
+.public-toggle input[type="checkbox"]:checked::before {
+  transform: translateX(20px);
+}
+
+/* ---
+ * INICIO: ESTILOS DE JUEGO (PORTERÍA)
+ * --- */
+
+/* --- 12. VISTA DE JUEGO (GAME) --- */
+.game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease-out;
+  padding-bottom: 10vh;
+}
+.stadium-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 45%, #2E8B57 45%, #228B22 100%);
+  box-shadow: inset 0 0 200px 50px rgba(0,0,0,0.6);
+}
+.stadium-background::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform-origin: bottom;
+  transform: translateX(-50%) perspective(300px) rotateX(55deg);
+  width: 90%;
+  height: 350px;
+  border: 7px solid rgba(255, 255, 255, 0.7);
+  border-bottom: none;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  background: linear-gradient(to top, 
+    transparent 49.5%, 
+    rgba(255,255,255,0.3) 49.5%, 
+    rgba(255,255,255,0.3) 50.5%, 
+    transparent 50.5%
+  );
+}
+
+/* --- 13. HUD (Marcador) --- */
+.hud {
+  position: absolute;
+  top: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  color: white;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+}
+.hud h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+}
+.hud h3 {
+  margin: 5px 0 0;
+  font-size: 1.5rem;
+  color: var(--neon-orange);
+  font-weight: 700;
+  animation: pulse 2s infinite ease-in-out;
+  text-align: center;
+}
+.game-code-display {
+  color: var(--neon-orange);
+  font-size: 2rem;
+}
+
+/* --- 14. Contenedor de la Portería (wrapper) --- */
+.goal-wrapper {
+  position: relative;
+  z-index: 5;
+  &.shooter-cursor { cursor: crosshair; }
+  &.keeper-cursor { cursor: grab; }
+  &.disabled-cursor { cursor: not-allowed; }
+}
+
+/* --- 15. Marco de la Portería (3D Corregido) --- */
+.goal-frame {
+  width: 550px;
+  height: 320px;
+  position: relative;
+  filter: drop-shadow(5px 10px 15px rgba(0,0,0,0.5));
+  border-top: 20px solid #eee;
+  border-left: 20px solid #eee;
+  border-right: 20px solid #eee;
+  border-radius: 3px;
+  box-shadow: inset 5px -5px 15px rgba(0,0,0,0.4);
+  /* ⚠️ CORRECCIÓN: Fondo transparente */
+  background-color: transparent; 
+}
+
+/* --- 16. La Red --- */
+.goal-net {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  position: relative;
+  z-index: 1;
+  background-image: 
+      linear-gradient(rgba(255,255,255,0.2) 2px, transparent 2px),
+      linear-gradient(90deg, rgba(255,255,255,0.2) 2px, transparent 2px);
+  background-size: 30px 30px;
+  background-position: center;
+  /* ⚠️ CORRECCIÓN: Fondo transparente */
+  background-color: transparent;
+}
+
+/* --- 17. Zonas Interactivas --- */
+.goal-zone {
+  border: 1px dashed rgba(255,255,255,0.1);
+  transition: all 0.15s ease-out;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+  background-size: 0% 0%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.goal-zone:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  background-size: 200% 200%;
+  transform: scale(1.03);
+  z-index: 10;
+  border-color: rgba(255,255,255,0.5);
+}
+.selected-myself {
+  background-color: rgba(255, 215, 0, 0.4) !important;
+  border: 2px solid var(--neon-orange);
+  box-shadow: inset 0 0 30px var(--neon-orange);
+  animation: pulse-selected 1.5s infinite;
+}
+
+/* --- 18. Instrucción Debajo de la Portería --- */
+.instruction {
+  margin-top: 30px;
+  font-size: 1.5rem;
+  font-family: var(--font-display);
+  text-shadow: 1px 1px 2px black;
+  background: rgba(0,0,0,0.7);
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid var(--glass-border);
+}
+
+/* --- 19. Animaciones de Vuelo (Balón y Guantes) --- */
+.ball-animation-wrapper,
+.keeper-animation-wrapper {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3.5rem;
+  pointer-events: none; 
+}
+.ball-animation {
+  position: relative;
+  z-index: 10;
+  animation: shoot-ball 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.ball-animation::before {
+  content: '⚽';
+  position: absolute;
+  top: 0; left: 0;
+  opacity: 0.5;
+  filter: blur(5px);
+  transform: scale(1.1);
+  z-index: -1;
+  animation: shoot-ball-trail 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.keeper-animation {
+  font-size: 4.5rem;
+  z-index: 9;
+  animation: keeper-dive 0.25s ease-out forwards;
+}
+
+/* --- 20. Notificación de Turno --- */
+.role-notification {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px 40px;
+    border-radius: 10px;
+    z-index: 100;
+    text-align: center;
+    border: 3px solid var(--neon-orange);
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    animation: slideDownIn 0.3s ease-out forwards, slideUpOut 0.3s ease-in 1.7s forwards;
+}
+.role-notification h1 {
+  color: white;
+  font-family: var(--font-display);
+  font-size: 3rem;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* --- 21. Pantalla Final (Estadísticas) --- */
+.winner-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(13, 15, 19, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  color: white;
+  animation: fadeIn 0.5s ease-out;
+}
+.winner-overlay h1 {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  color: var(--neon-orange);
+  margin-bottom: 30px;
+  text-shadow: 0 0 20px var(--neon-orange);
+}
+.winner-overlay button {
+  margin-top: 30px;
+  background-color: var(--neon-green);
+  color: black;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  box-shadow: 0 0 20px rgba(0, 255, 135, 0.4);
+}
+.winner-overlay button:hover {
+  background: #00e676;
+}
+
+.stats-table {
+  width: 80%;
+  max-width: 400px;
+  border-collapse: collapse;
+  text-align: left;
+  background: rgba(0,0,0,0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+.stats-table th,
+.stats-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.stats-table th {
+  background-color: rgba(0,0,0,0.5);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+.stats-table td {
+  font-size: 1rem;
+}
+.stats-table tr:last-child td {
+  border-bottom: none;
+}
+.stats-table tr:nth-child(1) td {
+  font-weight: bold;
+  color: var(--neon-orange);
+}
+
+.leave-btn {
+  position: absolute;
+  bottom: 20px;
+  background-color: var(--danger-red);
+  color: white;
+  width: auto;
+  padding: 10px 20px;
+  box-shadow: 0 0 15px rgba(229, 57, 53, 0.4);
+}
+.leave-btn:hover {
+  background-color: #f44336;
+}
+
+/* --- 22. Pop-up del Bot (NUEVO) --- */
+.bot-prompt {
+  position: absolute;
+  bottom: 100px;
+  background: var(--dark-bg);
+  border: 1px solid var(--neon-orange);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  z-index: 110;
+  animation: fadeIn 0.3s ease-out;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+.bot-prompt p {
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+.bot-prompt button {
+  width: auto;
+  padding: 10px 20px;
+  margin: 0 5px;
+}
+.btn-bot-yes {
+  background-color: var(--neon-green);
+  color: black;
+}
+.btn-bot-no {
+  background-color: #555;
+  color: white;
+}
+
+
+/* --- 23. Keyframes (Animaciones) --- */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; text-shadow: 0 0 10px var(--neon-orange); }
+  50% { opacity: 0.9; text-shadow: 0 0 20px var(--neon-orange); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes slideDownIn {
+  from { opacity: 0; transform: translate(-50%, -100%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+@keyframes slideUpOut {
+  from { opacity: 1; transform: translate(-50%, -50%); }
+  to { opacity: 0; transform: translate(-50%, -150%); }
+}
+@keyframes pulse-selected {
+  0%, 100% { box-shadow: inset 0 0 30px var(--neon-orange); }
+  50% { box-shadow: inset 0 0 15px var(--neon-orange); }
+}
+@keyframes shoot-ball {
+  from { transform: scale(0.3) translate(0, 200px); opacity: 0; }
+  70% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1) translate(0, 0); opacity: 1; }
+}
+@keyframes shoot-ball-trail {
+  from { transform: scale(0.3) translate(0, 200px); opacity: 0; }
+  to { transform: scale(1.5) translate(0, 0); opacity: 0; }
+}
+@keyframes keeper-dive {
+  from { transform: scale(0.5); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: scale(1.3); opacity: 1; }
+}
+
+/* --- 24. RESPONSIVE (MÓVIL) --- */
+@media (max-width: 600px) {
+  /* Lobby */
+  .lobby-main { grid-template-columns: 1fr; }
+  .lobby-background { padding: 10px; }
+  .lobby-container { padding: 15px; }
+  .lobby-header h1 { font-size: 2rem; }
+
+  /* Juego */
+  .hud h2 { font-size: 1.8rem; }
+  .hud h3 { font-size: 1.1rem; }
+  .game-code-display { font-size: 1.5rem; }
+
+  /* Portería Responsive */
+  .goal-frame {
+    width: 90vw; /* 90% del ancho de la pantalla */
+    height: 52.25vw; /* Ratio 550/320 = ~0.58. 90 * 0.58 = 52.25 */
+    border-width: 10px; /* Postes más finos */
+  }
+  .goal-net {
+    background-size: 20px 20px; /* Red más pequeña */
+  }
+  .ball-animation-wrapper { font-size: 2.5rem; }
+  .keeper-animation { font-size: 3.5rem; }
+
+  .instruction { font-size: 1rem; margin-top: 20px; }
+  
+  .role-notification h1 { font-size: 1.8rem; }
+  .bot-prompt { width: 90%; bottom: 120px; }
+  .leave-btn { bottom: 10px; }
+
+  .winner-overlay h1 { font-size: 2.2rem; }
+  .stats-table { width: 90%; }
+}
