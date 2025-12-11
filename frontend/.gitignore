@@ -9,7 +9,7 @@ node_modules/
 
 # Ignorar carpetas de desarrollo
 public/
-src/
+
 tests/
 coverage/
 .vscode/
