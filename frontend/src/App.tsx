@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import Goal from './components/Goal';
 import Lobby from './components/Lobby';
@@ -27,6 +27,13 @@ function App() {
   const [status, setStatus] = useState('Connectant...');
 
   const [game, setGame] = useState<GameData | null>(null);
+  // Ref para acceder al estado dentro de los callbacks de socket
+  const gameRef = useRef<GameData | null>(null);
+
+  useEffect(() => {
+    gameRef.current = game;
+  }, [game]);
+
   const [notification, setNotification] = useState<string | null>(null);
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
   const [result, setResult] = useState<any>(null); // 👈 Estat que cal netejar
@@ -34,7 +41,8 @@ function App() {
   const [finalStats, setFinalStats] = useState<PlayerStat[] | null>(null);
   
   const [showBotButton, setShowBotButton] = useState(false);
-const [botTimer, setBotTimer] = useState<number | null>(null);
+  const [botTimer, setBotTimer] = useState<number | null>(null);
+
   const [playSound] = useSound({
     click: '/sounds/click.mp3',
     goal: '/sounds/goal.mp3',
@@ -43,8 +51,9 @@ const [botTimer, setBotTimer] = useState<number | null>(null);
   });
 
   useEffect(() => {
-// ✅ AHORA (Producción)
-const newSocket = io('https://devchallenge3.onrender.com');    setSocket(newSocket);
+    // ✅ AHORA (Producción)
+    const newSocket = io('https://devchallenge3.onrender.com');
+    setSocket(newSocket);
     newSocket.on('connect', () => {
       setStatus('Connectat');
       newSocket.emit('get_public_games');
@@ -106,16 +115,25 @@ const newSocket = io('https://devchallenge3.onrender.com');    setSocket(newSock
 
     newSocket.on('round_result', (data) => {
       setResult(data);
+      const isShooter = gameRef.current?.myRole === 'shooter';
+      const pointsSuffix = isShooter ? '' : ` (Porter: ${data.keeperPointsAwarded} ${data.keeperPointsAwarded === 1 ? 'Pt' : 'Pts'})`;
+
       if (data.isGoal) {
         playSound('goal');
-        if (data.keeperPointsAwarded === 1) {
-             setStatus('¡GOL! (Porter: 1 Pt)');
+        // Si no es porter, solo muestra ¡GOL!
+        if (isShooter) {
+             setStatus('¡GOL!' + pointsSuffix);
         } else {
-             setStatus('¡GOL! (Porter: 0 Pts)');
+            // Si es porter, muestra los puntos
+            if (data.keeperPointsAwarded === 1) {
+                 setStatus('¡GOL! (Porter: 1 Pt)');
+            } else {
+                 setStatus('¡GOL! (Porter: 0 Pts)');
+            }
         }
       } else {
         playSound('save');
-        setStatus('¡PARADÓN! (Porter: 2 Pts)');
+        setStatus(`¡PARADÓN!${pointsSuffix}`);
       }
     });
 
